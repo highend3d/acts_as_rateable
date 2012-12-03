@@ -7,10 +7,8 @@ module ActiveRecord
 
       module AssignRateWithUserId
         def <<(rate)
-          r = Rating.new
+          r = Rating.find_or_initialize_by_user_id_and_rateable_type_and_rateable_id(rate.user_id, proxy_association.owner.type, proxy_association.owner.id)
           r.rate = rate
-          r.rateable = proxy_association.owner
-          r.user_id = rate.user_id
           r.rater_name = rate.rater_name
           r.save
         end

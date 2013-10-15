@@ -6,6 +6,9 @@ class Rating < ActiveRecord::Base
   validates_presence_of :user_id
   validates_uniqueness_of :user_id, :scope => [:rateable_id, :rateable_type]
 
+  scope :created_within_1_month, k.where("created_at > ?", 1.month.ago)
+  scope :created_within_1_week, k.where("created_at > ?", 1.week.ago)
+
   ##
   # Return the specified array of Ratings in json format.
   #

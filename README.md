@@ -9,7 +9,7 @@ In this case, one user can rate an object once.
 You can easily install gem by adding this line into your Gemfile:
 
 ```ruby
-  gem 'acts_as_rateable', :git => 'git://github.com/sheldond/acts_as_rateable.git', :branch => 'master'
+  gem 'acts_as_rateable', :git => 'git://github.com/highend3d/acts_as_rateable.git', :branch => 'master'
 ```
 
 After you install Acts As Rateable and add it to your Gemfile, you need to run the generator:

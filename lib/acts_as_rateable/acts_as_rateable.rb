@@ -7,7 +7,7 @@ module ActiveRecord
 
       module AssignRateWithUserId
         def <<(rate)
-          r = Rating.find_or_initialize_by_user_id_and_rateable_type_and_rateable_id(rate.user_id, proxy_association.owner.class.base_class.to_s, proxy_association.owner.id)
+          r = Rating.where(user_id: rate.user_id, rateable_type: proxy_association.owner.class.base_class.to_s, rateable_id: proxy_association.owner.id).first_or_create
           r.rate = rate
           r.rater_name = rate.rater_name
           r.save
@@ -16,7 +16,7 @@ module ActiveRecord
 
       module ClassMethods
         def acts_as_rateable(options = { })
-          has_many :ratings, :as => :rateable, :dependent => :destroy, :include => :rate
+          has_many :ratings, -> { includes(:rate) }, :as => :rateable, :dependent => :destroy
           has_many :rates, :through => :ratings, :extend => AssignRateWithUserId
 
           include ActiveRecord::Acts::Rateable::InstanceMethods
@@ -27,7 +27,7 @@ module ActiveRecord
       module SingletonMethods
         # Find all objects rated by score.
         def find_average_of(score)
-          find(:all, :include => [:rates])
+          all.includes(:rates)
           .collect { |i| i if i.average_rating.to_i == score }
           .compact
         end
